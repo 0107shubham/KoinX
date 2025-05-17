@@ -6,9 +6,33 @@ const CapitalGainsCards = () => {
   const { capitalGains, initialCapitalGains } = useContext(HoldingsContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessage, setShowMessage] = useState(true);
 
   const prevCapitalGainsRef = useRef();
+
+  // Pre-harvesting variables
+  const preNetstProfit = initialCapitalGains.stcg.profits;
+  const preNetltProfit = initialCapitalGains.ltcg.profits;
+  const preNetstLoss = initialCapitalGains.stcg.losses;
+  const preNetltLoss = initialCapitalGains.ltcg.losses;
+  const newPrest = preNetstProfit - preNetstLoss;
+  const newPrelt = preNetltProfit - preNetltLoss;
+  const preRealised = newPrest + newPrelt;
+  const preTotalLosses = preNetstLoss + preNetltLoss;
+
+  // Post-harvesting variables
+  const postNetstProfit = capitalGains.stcg.profits;
+  const postNetltProfit = capitalGains.ltcg.profits;
+  const postNetstLoss = capitalGains.stcg.losses;
+  const postNetltLoss = capitalGains.ltcg.losses; // Fixed typo
+  const newPostst = postNetstProfit - postNetstLoss;
+  const newPostlt = postNetltProfit - postNetltLoss;
+  const postRealised = newPostst + newPostlt;
+  const postTotalLosses = postNetstLoss + postNetltLoss;
+
+  const savings = preRealised < postRealised ? postRealised - preRealised : 0;
+  const lossesReduced = postTotalLosses < preTotalLosses;
+  const lossReductionAmount = preTotalLosses - postTotalLosses;
 
   // Detect changes in capitalGains
   useEffect(() => {
@@ -16,19 +40,21 @@ const CapitalGainsCards = () => {
       const hasChanged =
         JSON.stringify(prevCapitalGainsRef.current) !==
         JSON.stringify(capitalGains);
-      setShowMessage(hasChanged);
+      setShowMessage(hasChanged || savings > 0 || lossesReduced);
+    } else {
+      setShowMessage(savings > 0 || lossesReduced);
     }
     prevCapitalGainsRef.current = capitalGains;
-  }, [capitalGains]);
+  }, [capitalGains, savings, lossesReduced]);
 
-  // Fetch capital gains data
+  // Fetch capital gains data (for debugging)
   useEffect(() => {
     const fetchCapitalGains = async () => {
       try {
         const res = await fetch("/capitalGains.json");
         if (!res.ok) throw new Error("Failed to fetch capital gains");
         const data = await res.json();
-        // Data is already set in HoldingsProvider
+        console.log("Fetched capitalGains:", data);
       } catch (err) {
         console.error("Error fetching capital gains:", err);
         setError("Failed to load capital gains data");
@@ -39,6 +65,18 @@ const CapitalGainsCards = () => {
 
     fetchCapitalGains();
   }, []);
+
+  // Debug calculations
+  console.log({
+    preRealised,
+    postRealised,
+    savings,
+    preTotalLosses,
+    postTotalLosses,
+    lossesReduced,
+    lossReductionAmount,
+    showMessage,
+  });
 
   if (loading) {
     return (
@@ -51,30 +89,6 @@ const CapitalGainsCards = () => {
   if (error) {
     return <div className="text-red-500 text-center p-4">{error}</div>;
   }
-
-  // Pre-harvesting variables
-  const preNetstProfit = initialCapitalGains.stcg.profits;
-  const preNetltProfit = initialCapitalGains.ltcg.profits;
-  const preNetstLoss = initialCapitalGains.stcg.losses;
-  const preNetltLoss = initialCapitalGains.ltcg.losses;
-  const newPrest = preNetstProfit - preNetstLoss; // Net short-term gains
-  const newPrelt = preNetltProfit - preNetltLoss; // Net long-term gains
-  const preRealised = newPrest + newPrelt;
-  const preTotalLosses = preNetstLoss + preNetltLoss;
-
-  // Post-harvesting variables
-  const postNetstProfit = capitalGains.stcg.profits;
-  const postNetltProfit = capitalGains.ltcg.profits;
-  const postNetstLoss = capitalGains.stcg.losses;
-  const postNetstloss = capitalGains.ltcg.losses; // Long-term losses
-  const newPostst = postNetstProfit - postNetstLoss; // Net short-term gains
-  const newPostlt = postNetltProfit - postNetstloss; // Net long-term gains
-  const postRealised = newPostst + newPostlt;
-  const postTotalLosses = postNetstLoss + postNetstloss;
-
-  const savings = preRealised > postRealised ? preRealised - postRealised : 0;
-  const lossesReduced = postTotalLosses < preTotalLosses;
-  const lossReductionAmount = preTotalLosses - postTotalLosses;
 
   return (
     <div className="flex flex-col md:flex-row md:space-x-6 mb-6">
@@ -177,7 +191,7 @@ const CapitalGainsCards = () => {
                 -${postNetstLoss.toFixed(2)}
               </td>
               <td className="p-2 font-inter font-medium text-sm md:text-[16px] leading-[20px]">
-                -${postNetstloss.toFixed(2)}
+                -${postNetltLoss.toFixed(2)}
               </td>
             </tr>
             <tr>
@@ -202,26 +216,21 @@ const CapitalGainsCards = () => {
           </span>
         </p>
 
-        {savings > 0 ? (
-          <div className="flex items-center space-x-2 mt-4">
-            <img src={celebrate} alt="celebrate" className="h-5 w-5" />
-            <p className="text-sm md:text-[16px] leading-[20px] font-inter font-medium text-white">
-              You're going to save{" "}
-              <span className="font-semibold">${savings.toFixed(2)}</span>!
-            </p>
-          </div>
-        ) : showMessage && lossesReduced ? (
-          <div className="flex items-center space-x-2 mt-4">
-            <img src={celebrate} alt="celebrate" className="h-5 w-5" />
-            <p className="text-sm md:text-[16px] leading-[20px] font-inter font-medium text-white">
-              You've reduced losses by{" "}
-              <span className="font-semibold">
-                ${lossReductionAmount.toFixed(2)}
-              </span>
-              !
-            </p>
-          </div>
-        ) : null}
+        <div className=" h-[30px] ">
+          {" "}
+          {true && savings > 0 ? (
+            <div className="flex items-center space-x-2 ">
+              <img src={celebrate} alt="celebrate" className="h-5 w-5" />
+              <p className="text-sm md:text-[16px] leading-[20px] font-inter font-medium text-white">
+                {savings > 0
+                  ? `You're going to save $${savings.toFixed(2)}!`
+                  : `You've reduced losses by $${lossReductionAmount.toFixed(
+                      2
+                    )}!`}
+              </p>
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <style jsx>{`
