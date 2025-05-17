@@ -202,7 +202,7 @@ const CapitalGainsCards = () => {
           </span>
         </p>
 
-        {showMessage && savings > 0 ? (
+        {savings > 0 ? (
           <div className="flex items-center space-x-2 mt-4">
             <img src={celebrate} alt="celebrate" className="h-5 w-5" />
             <p className="text-sm md:text-[16px] leading-[20px] font-inter font-medium text-white">

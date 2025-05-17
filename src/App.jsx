@@ -4,8 +4,7 @@ import Accordion from "./components/Accordion";
 import CapitalGainsCards from "./components/CapitalGainsCards";
 import HoldingsTable from "./components/HoldingsTable";
 import HoldingsProvider from "./components/HoldingsProvider";
-import "./app.css";
-
+import "./App.css";
 const App = () => (
   <HoldingsProvider>
     <div className="min-h-screen bg-black">
