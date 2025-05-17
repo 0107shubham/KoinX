@@ -1,4 +1,5 @@
 import { useState } from "react";
+import faq from "../assets/faq.svg"; // Adjust the path as necessary
 
 const Accordion = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,15 +10,8 @@ const Accordion = () => {
         className="flex justify-between items-center p-4 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center">
-          <svg
-            className="w-5 h-5 mr-2 text-white"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-.5-13h1v6h-1zm0 8h1v1h-1z" />
-          </svg>
+        <div className="flex items-center gap-2">
+          <img src={faq} alt="faq" className="h-5" />
           <h3 className="text-base sm:text-lg text-white font-semibold">
             Important Notes & Disclaimers
           </h3>

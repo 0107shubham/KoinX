@@ -1,5 +1,7 @@
-import codexlogo from "../../public/codexlogo.svg";
-import Menu from "../../public/menu.svg"; // Make sure this import is correct
+// import codexlogo from "../../public/codexlogo.svg";
+// import Menu from "../../public/menu.svg"; // Make sure this import is correct
+import codexlogo from "../assets/codexlogo.svg"; // Adjust the path as necessary
+import Menu from "../assets/Menu.svg"; // Adjust the path as necessary
 
 const Header = () => (
   <header className="fixed top-0 left-0 w-full bg-[#171A26] flex justify-between shadow p-4 z-50">
