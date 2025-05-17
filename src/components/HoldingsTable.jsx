@@ -286,27 +286,34 @@ const HoldingsTable = () => {
                       </label>
                     </td>
                     <td className="p-4 text-left ">
-                      <div className="flex flex-col items-start relative group">
-                        <span className="font-medium text-sm md:text-[16px] leading-4 md:leading-[22px] tracking-[0.1px] text-white whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis">
-                          {`${holding.coinName} (${holding.coin})`.length > 20
-                            ? `${holding.coinName} (${holding.coin})`.slice(
-                                0,
-                                20
-                              ) + "..."
-                            : `${holding.coinName} (${holding.coin})`}
-                        </span>
-                        {`${holding.coinName} (${holding.coin})`.length >
-                          20 && (
-                          <div className="absolute bottom-full mb-2 left-0 z-10 hidden group-hover:flex flex-col items-start">
-                            <div className="bg-white text-black text-sm font-medium px-3 py-1 rounded shadow-md max-w-xs whitespace-nowrap">
-                              {`${holding.coinName} (${holding.coin})`}
+                      <div className="flex items-center">
+                        <img
+                          src={holding.logo}
+                          alt={holding.coin}
+                          className="w-6 h-6 mr-2"
+                        />
+                        <div className="flex flex-col items-start relative group">
+                          <span className="font-medium text-sm md:text-[16px] leading-4 md:leading-[22px] tracking-[0.1px] text-white whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis">
+                            {`${holding.coinName} (${holding.coin})`.length > 20
+                              ? `${holding.coinName} (${holding.coin})`.slice(
+                                  0,
+                                  20
+                                ) + "..."
+                              : `${holding.coinName} (${holding.coin})`}
+                          </span>
+                          {`${holding.coinName} (${holding.coin})`.length >
+                            20 && (
+                            <div className="absolute bottom-full mb-2 left-0 z-10 hidden group-hover:flex flex-col items-start">
+                              <div className="bg-white text-black text-sm font-medium px-3 py-1 rounded shadow-md max-w-xs whitespace-nowrap">
+                                {`${holding.coinName} (${holding.coin})`}
+                              </div>
+                              <div className="w-2 h-2 bg-white rotate-45 ml-3 -mt-1 shadow-md"></div>
                             </div>
-                            <div className="w-2 h-2 bg-white rotate-45 ml-3 -mt-1 shadow-md"></div>
-                          </div>
-                        )}
-                        <span className="font-medium text-xs md:text-[14px] leading-3 md:leading-[20px] tracking-[0.1px] text-white whitespace-nowrap">
-                          {holding.coin}
-                        </span>
+                          )}
+                          <span className="font-medium text-xs md:text-[14px] leading-3 md:leading-[20px] tracking-[0.1px] text-white whitespace-nowrap">
+                            {holding.coin}
+                          </span>
+                        </div>
                       </div>
                     </td>
                     <td className="p-4 text-end">
