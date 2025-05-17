@@ -317,9 +317,12 @@ const HoldingsTable = () => {
                         <span className="text-[10px] md:text-[12px] leading-3 md:leading-[16px] font-medium text-[#A9AFC5] whitespace-nowrap">
                           ${holding.averageBuyPrice.toFixed(2)}/ {holding.coin}
                         </span>
-                        <div className="absolute hidden group-hover:block bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white text-black text-sm rounded p-2 w-fit text-center shadow-lg z-10">
-                          {holding.totalHolding}
-                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-8 border-transparent border-t-white"></div>
+
+                        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:flex flex-col items-end z-10">
+                          <div className="bg-white text-black text-xs font-medium px-3 py-1 rounded shadow-md whitespace-nowrap">
+                            {holding.totalHolding}
+                          </div>
+                          <div className="w-2 h-2 bg-white rotate-45 mt-[-4px] shadow-md self-center"></div>
                         </div>
                       </div>
                     </td>
